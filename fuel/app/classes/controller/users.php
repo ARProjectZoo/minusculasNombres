@@ -3,7 +3,7 @@ class Controller_Users extends Controller_Base
 {
 	public $id_admin = 1;
     public $id_user = 2;
-    
+
     public function post_register()
     {
         try {
@@ -47,7 +47,7 @@ class Controller_Users extends Controller_Base
             $user->password = $this->encode($input['password']);
             $user->email = $input['email'];
             $user->id_device = $input['id_device'];
-            $user->id_role = self::$id_user;
+            $user->id_role = $this->$id_user;
             $user->profilePicture = "";
             $user->x = $input['x'];
 			$user->y = $input['y'];
