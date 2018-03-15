@@ -18,11 +18,11 @@ class Model_Elements extends Orm\Model
                 'validation' => array('required', 'max_length' => array(100))   
             ),
      'x' => array(
-                'data_type' => 'decimal',
+                'data_type' => 'float',
                 'validation' => array('required', 'max_length' => array(65))
                 ),
      'y' => array(
-                'data_type' => 'decimal',
+                'data_type' => 'float',
                 'validation' => array('required', 'max_length' => array(65))
                 ),
      'id_type' => array(

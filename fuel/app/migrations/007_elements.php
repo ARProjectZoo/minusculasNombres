@@ -13,8 +13,8 @@ class Elements
                 'name' => array('type' => 'varchar', 'constraint' => 100),
                 'description' => array('type' => 'varchar', 'constraint' => 100),
                 'photo' => array('type' => 'varchar', 'constraint' => 100),
-                'x' => array('type' => 'decimal', 'constraint' => 65),
-                'y' => array('type' => 'decimal', 'constraint' => 65),
+                'x' => array('type' => 'float', 'constraint' => 65),
+                'y' => array('type' => 'float', 'constraint' => 65),
                 'id_type' => array('type'=> 'int', 'constraint' => 100),
                 'id_user' => array('type'=> 'int', 'constraint' => 100)
 
