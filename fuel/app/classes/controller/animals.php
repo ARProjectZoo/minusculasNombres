@@ -40,23 +40,30 @@ class Controller_Animals extends Controller_Base
             }
 
 			$config = array(
-          	  'path' => DOCROOT . 'assets/img',
-          	  'randomize' => true,
-          	  'ext_whitelist' => array('img', 'jpg', 'jpeg', 'gif', 'png'),
-            );
-            Upload::process($config);
-            $photoToSave = "";
-            if (Upload::is_valid())
-            {
-                Upload::save();
-                foreach(Upload::get_files() as $file)
-                {
-                	$photoToSave = 'http://localhost:8888/CAMBIOAPI/public/assets/img/'. $file['saved_as'];
-                }
-            }
-            foreach (Upload::get_errors() as $file)
-            {
-                          return $this->respuesta(500, 'Error en el servidor', '');
+                  'path' => DOCROOT . 'assets/img',
+                  'randomize' => true,
+                  'ext_whitelist' => array('img', 'jpg', 'jpeg', 'gif', 'png'),
+              );
+
+              Upload::process($config);
+              $photoToSave = "";
+              if (Upload::is_valid())
+              {
+                  Upload::save();
+                  foreach(Upload::get_files() as $file)
+                  {
+                    // var_dump($_FILES['photo']['saved_as']);
+                    $photoToSave = 'http://'.$_SERVER['SERVER_NAME'].'/zoo/minusculasNombres/public/assets/img/'.$file['saved_as'];
+                  }
+              }
+
+              foreach (Upload::get_errors() as $file)
+              {
+                  return $this->response(array(
+                      'code' => 500,
+                      'message' => 'Error en el servidor',
+                      'data' => $file 
+                  ));
               }
                 $newStory = $this->newStory($_POST, $photoToSave, $decodedToken);
                 $json = $this->saveStory($newStory);

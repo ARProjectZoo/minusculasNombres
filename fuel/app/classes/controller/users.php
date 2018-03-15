@@ -236,29 +236,6 @@ class Controller_Users extends Controller_Base
 	}
 
 
-
-	/*private function newImage($input, $photoToSave, $decodedToken)
-    {
-    	$story = new Model_Stories();
-        $story->profilePicture = $photoToSave;
-        $story->id_user = $decodedToken->id;
-        return $story;
-    }
-
-    private function saveImage($story)
-    {
-		$storyToSave = $story;
-    	$storyToSave->save();
-    	$arrayData = array(); 
-    	$arrayData['imageSaved'] = $arrayData;
-    	$json = $this->response(array(
-                'code' => 201,
-                'message' => 'Recuerdo creado',
-                'data' => $arrayData
-            ));
-    	return $json;
-    }*/
-
     public function post_changeImage()
     {
     	$authenticated = $this->authenticate();
@@ -283,17 +260,21 @@ class Controller_Users extends Controller_Base
 			        $photoToSave = "";
 			        if (Upload::is_valid())
 			        {
-			        	 Upload::save();
+			            Upload::save();
 			            foreach(Upload::get_files() as $file)
 			            {
-			            	$photoToSave = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/CAMBIOAPI/public/assets/img/'.$file['saved_as'];
+			            	// var_dump($_FILES['photo']['saved_as']);
+			            	$photoToSave = 'http://'.$_SERVER['SERVER_NAME'].'/zoo/minusculasNombres/public/assets/img/'.$file['saved_as'];
 			            }
-			           
 			        }
 
 			        foreach (Upload::get_errors() as $file)
 			        {
-			            return $this->respuesta(500, 'error en la subida','');
+			            return $this->response(array(
+			                'code' => 500,
+			                'message' => 'Error en el servidor',
+			                'data' => $file 
+			            ));
 			        }
 		         //FALTA AQUI GUARDAR LOS CAMBIOS DEL PICTURE PROFILE DEL USER. Y EL MENSAJE 200
 			       	$user->profilePicture = $photoToSave;
