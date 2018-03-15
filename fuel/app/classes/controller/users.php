@@ -1,0 +1,296 @@
+<?php
+class Controller_Users extends Controller_Base
+{
+    public function post_register()
+    {
+        try {
+            if ( !isset($_POST['userName']) || !isset($_POST['password']) || !isset($_POST['email'])) 
+            {
+            	return $this->respuesta(400, 'Algun paramentro esta vacio', '');
+            }if(isset($_POST['x']) || isset($_POST['y'])){
+            		
+            		if(empty($_POST['x']) || empty($_POST['y'])){
+	            		return $this->respuesta(400, 'Coordenadas vacias', '');
+	            	}
+            	}
+            	else
+            	{
+            		return $this->respuesta(400, 'Coordenadas no definidas', '');
+            	}
+            if(!empty($_POST['userName']) && !empty($_POST['password']) && !empty($_POST['email']))
+            {
+            	if(strlen($_POST['password']) < 5)
+            	{
+            		return $this->respuesta(400, 'La contraseña debe tener al menos 5 caracteres', '');
+            	}
+				$input = $_POST;
+	            $newUser = $this->newUser($input);
+	           	$json = $this->saveUser($newUser);
+	        }
+	        else
+	        {
+	        	return $this->respuesta(400, 'Algun campo vacio', '');
+	        }
+        }catch (Exception $e){
+        	return $this->respuesta(500, $e->getMessage(), '');
+        }      
+    }
+
+
+    public function newUser($input)
+    {
+    		$user = new Model_Users();
+            $user->userName = $input['userName'];
+            $user->password = $this->encode($input['password']);
+            $user->email = $input['email'];
+            $user->id_device = $input['id_device'];
+            $user->id_role = $this->id_user;
+            $user->profilePicture = "";
+            $user->x = $input['x'];
+			$user->y = $input['y'];
+            return $user;
+    }
+
+    public function saveUser($user)
+    {
+    	$userExists = Model_Users::find('all', 
+    								array('where' => array(
+    													array('email', '=', $user->email),
+    														)
+    									)
+    							);
+    	if(empty($userExists)){
+    		$userToSave = $user;
+    		$userToSave->save();
+    		$arrayData = array();
+    		$arrayData['userName'] = $user->userName;
+    		return $this->respuesta(201, 'Usuario creado', $arrayData);
+    	}else{
+    		return $this->respuesta(204, 'Usuario ya registrado', '');
+    	}
+    }
+
+    public function post_login()
+    {	try{
+	        if ( !isset($_POST['email']) || !isset($_POST['password']) ) {
+	        	return $this->respuesta(400, 'Alguno de los datos esta vacio', '');
+	        }else if( !empty($_POST['email']) && !empty($_POST['password'])){
+	            $input = $_POST;
+	            $user = Model_Users::find('all', 
+		            						array('where' => array(
+		            							array('email', '=', $input['email']), 
+		            							array('password', '=', $this->encode($input['password']))
+		            							)
+		            						)
+		            					);
+	            if(!empty($user))
+	            {
+	            	$user = reset($user);
+	            	$userName = $user->userName;
+	            	$password = $user->password;
+	            	$id = $user->id;
+	            	$email = $user->email;
+	            	$id_role = $user->id_role;
+	            	$profilePicture = $user->profilePicture;
+	                $token = $this->encodeToken($userName, $password, $id, $email, $id_role, $profilePicture);
+	                $arrayData = array();
+	               	$arrayData['token'] = $token;
+	               	return $this->respuesta(200, 'Log In correcto', $arrayData);
+	        	}else{
+	        		return $this->respuesta(400, 'algun dato erroneo', '');
+	       		 }
+	     
+	        }else{
+	        	return $this->respuesta(400, 'No se permiten cadenas de texto vacias', '');
+	        }
+	        	
+	    }catch(Exception $e){
+	    	return $this->respuesta(500, $e->getMessage(), '');
+	    }
+	}
+	
+	public function post_forgotPassword()
+	{
+		try{
+			$input = $_POST;
+			if ( !isset($_POST['userName']) || !isset($_POST['email']) ) {
+				return $this->respuesta(400, 'alguno de los datos esta vacio', '');
+	        }else if( !empty($_POST['userName']) && !empty($_POST['email'])){
+		    	$user = Model_Users::find('all', 
+		           					array('where' => array(
+		           							array('userName', '=', $input['userName']), 
+		           							array('email', '=', $input['email'])
+		           							)
+		           						)
+		           					);
+			    if($user != null){
+			   		   	$user = reset($user);
+		            	$userName = $user->userName;
+		            	$password = $user->password;
+		            	$id = $user->id;
+		            	$email = $user->email;
+		            	$id_role = $user->id_role;
+		            	$profilePicture = $user->profilePicture;
+		                $token = $this->encodeToken($userName, $password, $id, $email, $id_role, $profilePicture);
+		                $arrayData = array();
+		               	$arrayData['token'] = $token;
+		               	return $this->respuesta(200, 'forgot correcto', $arrayData);
+			    }else{
+			    	return $this->respuesta(400, 'Usuario no encontrado.', '');
+			    }
+			}
+		}catch(Exception $e){
+			return $this->respuesta(500, $e->getMessage(), '');
+		}
+	}
+
+	public function post_changePassword()
+	{
+		$authenticated = $this->authenticate();
+    	$arrayAuthenticated = json_decode($authenticated, true);
+    	
+    	 if($arrayAuthenticated['authenticated']){
+			$newPassword = $_POST['newPassword'];
+			if( isset($newPassword)) {
+				$decodedToken = $this->decodeToken();
+				$user = Model_Users::find('all', 
+				            					array('where' => array(
+				            							array('userName', '=', $decodedToken->userName), 
+				            							array('password', '=', $decodedToken->email)
+				            							)
+				            						)
+				            					);
+				if(isset($newPassword)){
+					if(!empty($newPassword)){
+						if(strlen($newPassword) >= 5){
+							$userTochange = Model_Users::find($decodedToken->id);
+							$userTochange ->password = $this->encode($newPassword);
+							$userTochange -> save();
+
+								$userName = $userTochange->userName;
+				            	$password = $userTochange->password;
+				            	$id = $userTochange->id;
+				            	$email = $userTochange->email;
+				            	$id_role = $userTochange->id_role;
+				            	$profilePicture = $userTochange->profilePicture;
+
+							$token = $this->encodeToken($userName, $password, $id, $email, $id_role, $profilePicture);
+							$arrayData = array();
+			               	$arrayData['token'] = $token;
+			               	return $this->respuesta(200, 'Contraseña modificada correctamente', $arrayData);
+					    }else{
+					    	return $this->respuesta(204, 'Contraseña demasiado corta', "");
+					    }
+				    }else{
+				    	return $this->respuesta(400, 'Contraseña vacios', "");
+				        }
+				}else{
+					return $this->respuesta(400, 'Campos vacios', "");
+				}
+			}else{
+				return $this->respuesta(400, 'parametro no definido', "");
+			}
+		}else{
+			return $this->respuesta(400, 'NO AUTORIZADO', "");
+		}
+
+	}
+	public function get_show()
+	{
+		$authenticated = $this->authenticate();
+    	$arrayAuthenticated = json_decode($authenticated, true);
+    	
+    	 if($arrayAuthenticated['authenticated']){
+	    		$decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
+	    			$arrayData = array();
+	    			$arrayData['userName'] = $decodedToken->userName;
+	    			$arrayData['profilePicture'] = $decodedToken->profilePicture;		    			
+	    			return $this->respuesta(200, 'info User', $arrayData);				
+    	}else{
+    			return $this->respuesta(401, 'NO AUTORIZACION','');
+    		}
+    }
+    
+	private function post_saveImage($profilePicture)
+	{
+			$pictureToSave = $profilePicture;
+	    	$pictureToSave->save();
+	    	$arrayData = array();
+	    	$arrayData['photoSaved'] = $arrayData;
+	    	$json = $this->response(array(
+	                'code' => 201,
+	                'message' => 'Imagen guardada',
+	                'data' => $arrayData
+	            ));
+	    	return $json;
+
+
+	}
+
+
+    public function post_changeImage()
+    {
+    	$authenticated = $this->authenticate();
+    	$arrayAuthenticated = json_decode($authenticated, true);
+    
+    	 if($arrayAuthenticated['authenticated']){
+	    		$decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
+	    		$user = Model_Users::find($decodedToken->id);		
+	        try {
+		        	if (!isset($_FILES['photo_path']) || empty($_FILES['photo_path'])) 
+		            {
+
+		            	return $this->respuesta(401, 'La photo esta vacia', $_FILES);
+		            }
+	        	 	$config = array(
+			            'path' => DOCROOT . 'assets/img',
+			            'randomize' => true,
+			            'ext_whitelist' => array('img', 'jpg', 'jpeg', 'gif', 'png'),
+			        );
+
+			        Upload::process($config);
+			        $photoToSave = "";
+			        if (Upload::is_valid())
+			        {
+			        	 Upload::save();
+			            foreach(Upload::get_files() as $file)
+			            {
+			            	$photoToSave = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/CAMBIOAPI/public/assets/img/'.$file['saved_as'];
+			            }
+			           
+			        }
+
+			        foreach (Upload::get_errors() as $file)
+			        {
+			            return $this->respuesta(500, 'error en la subida','');
+			        }
+		         //FALTA AQUI GUARDAR LOS CAMBIOS DEL PICTURE PROFILE DEL USER. Y EL MENSAJE 200
+			       	$user->profilePicture = $photoToSave;
+			       	$user->save();
+
+			       	$userName = $user->userName;
+				    $password = $user->password;
+				    $id = $user->id;
+				    $email = $user->email;
+				    $id_role = $user->id_role;
+				    $profilePicture = $user->profilePicture;
+
+					$token = $this->encodeToken($userName, $password, $id, $email, $id_role, $profilePicture);
+					$arrayData = array();
+			        $arrayData['token'] = $token;
+			      	return $this->respuesta(201, 'Guardada perfectamente', $arrayData['token']);
+
+		        
+	        }
+	        catch (Exception $e)
+	        {
+	        	return $this->respuesta(500, $e->getMessage(),'');
+		  	}      
+    	 }
+    	 else
+    	 {
+    	 	return $this->respuesta(401, 'No autenticado','');
+     	}
+	 }
+}
+?>
