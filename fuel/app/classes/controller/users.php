@@ -204,7 +204,7 @@ class Controller_Users extends Controller_Base
     	$arrayAuthenticated = json_decode($authenticated, true);
     	
     	 if($arrayAuthenticated['authenticated']){
-	    		$decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
+	    		$decodedToken = $this->decodeToken();
 	    			$arrayData = array();
 	    			$arrayData['userName'] = $decodedToken->userName;
 	    			$arrayData['profilePicture'] = $decodedToken->profilePicture;		    			
