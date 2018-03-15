@@ -23,7 +23,7 @@ class Model_Users extends Orm\Model
             ),
      'profilePicture' => array(
                 'data_type' => 'varchar',
-                'validation' => array('max_length' => array(300))   
+                'validation' => array('max_length' => array(500))   
             ),
      'id_role' => array(
                 'data_type' => 'int',

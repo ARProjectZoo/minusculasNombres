@@ -12,7 +12,7 @@ class Animals
                 'id' => array('type' => 'int', 'constraint' => 100,'auto_increment' => true),
                 'name' => array('type' => 'varchar', 'constraint' => 100),
                 'description' => array('type' => 'varchar', 'constraint' => 100),
-                'photo' => array('type' => 'varchar', 'constraint' => 100),
+                'photo' => array('type' => 'varchar', 'constraint' => 500),
                 'x' => array('type' => 'float'),
                 'y' => array('type' => 'float'),
                 'id_continent' => array('type'=> 'int', 'constraint' => 100),

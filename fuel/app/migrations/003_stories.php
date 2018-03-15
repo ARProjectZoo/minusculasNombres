@@ -10,7 +10,7 @@ class Stories
         \DBUtil::create_table('Stories', 
             array(
                 'id' => array('type' => 'int', 'constraint' => 100,'auto_increment' => true),
-                'photo' => array('type' => 'varchar', 'constraint' => 100),
+                'photo' => array('type' => 'varchar', 'constraint' => 500),
                 'comment' => array('type' => 'varchar', 'constraint' => 300),
                 'date' => array('type' => 'varchar', 'constraint' => 300),
                 'id_user' => array('type'=> 'int', 'constraint' => 100)

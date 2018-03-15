@@ -15,7 +15,7 @@ class Users
                 'password' => array('type'=> 'varchar', 'constraint' => 200),
                 'id_role' => array('type'=> 'int', 'constraint' => 100),
                 'id_device' => array('type' => 'varchar', 'constraint'=> 100),
-                'profilePicture' => array('type' => 'varchar', 'constraint' => 300),
+                'profilePicture' => array('type' => 'varchar', 'constraint' => 500),
                 'x' => array('type' => 'varchar', 'constraint' => 100, NULL),
                 'y' => array('type' => 'varchar', 'constraint' => 100, NULL)
         ), array('id'), false, 'InnoDB', 'utf8_unicode_ci',

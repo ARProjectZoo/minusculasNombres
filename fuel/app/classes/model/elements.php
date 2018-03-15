@@ -15,7 +15,7 @@ class Model_Elements extends Orm\Model
             ),
      'photo' => array(
                 'data_type' => 'varchar',
-                'validation' => array('required', 'max_length' => array(100))   
+                'validation' => array('required', 'max_length' => array(500))   
             ),
      'x' => array(
                 'data_type' => 'float',
