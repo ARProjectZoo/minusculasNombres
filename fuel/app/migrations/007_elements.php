@@ -45,10 +45,10 @@ class Elements
     );
 
         //RESTAURANTES
-        \DB::query("INSERT INTO elements(id, name, description, photo, x, y, id_type, id_user)VALUES(NULL,'Restaurante Bagaray', 'Restaurante tematico de comida de temporada', 'admin','40,409006','-3,763889','1','1');")->execute();
+        \DB::query("INSERT INTO elements(id, name, description, photo, x, y, id_type, id_user)VALUES(NULL,'Restaurante Bagaray', 'Restaurante tematico de comida de temporada', 'admin','40.409006','-3.763889','1','1');")->execute();
         
         //EXHIBICIONES
-        \DB::query("INSERT INTO elements(id, name, description, photo, x, y, id_type, id_user)VALUES(NULL,'Delfines', 'Exhibiciones unicas que emocionaran a grandes y pequeños', 'admin','40,408163','-3,765017','2','1');")->execute();
+        \DB::query("INSERT INTO elements(id, name, description, photo, x, y, id_type, id_user)VALUES(NULL,'Delfines', 'Exhibiciones unicas que emocionaran a grandes y pequeños', 'admin','40.408163','-3.765017','2','1');")->execute();
     }
 
     function down()
