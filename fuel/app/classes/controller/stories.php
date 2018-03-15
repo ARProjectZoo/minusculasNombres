@@ -56,7 +56,7 @@ class Controller_Stories extends Controller_Base
 			            foreach(Upload::get_files() as $file)
 			            {
 			            	// var_dump($_FILES['photo']['saved_as']);
-			            	$photoToSave = 'http://' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . '/CAMBIOAPI/public/assets/img/'. $file['saved_as'];
+			            	$photoToSave = 'http://' . $_SERVER['SERVER_NAME'] . '/zoo/minusculasNombres/public/assets/img/'. $file['saved_as'];
 			            }
 			        }
 
@@ -65,7 +65,7 @@ class Controller_Stories extends Controller_Base
 			            return $this->response(array(
 			                'code' => 500,
 			                'message' => 'Error en el servidor',
-			                'data' => '' 
+			                'data' => $file 
 			            ));
 			        }
 			    
