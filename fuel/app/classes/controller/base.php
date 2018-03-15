@@ -6,8 +6,8 @@ class Controller_Base extends Controller_Rest
 	private static $secret_key = 'ARZOO';
     private static $encrypt = ['HS256'];
     private static $aud = null;
-    private static $id_admin = 1;
-    private static $id_user = 2;
+    public $id_admin = 1;
+    public $id_user = 2;
     
     protected function respuesta($code, $message, $data = [])
     {
