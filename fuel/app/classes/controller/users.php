@@ -265,7 +265,7 @@ class Controller_Users extends Controller_Base
     	$arrayAuthenticated = json_decode($authenticated, true);
     
     	 if($arrayAuthenticated['authenticated']){
-	    		$decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
+	    		$decodedToken = $this->decodeToken();
 	    		$user = Model_Users::find($decodedToken->id);		
 	        try {
 		        	if (!isset($_FILES['photo_path']) || empty($_FILES['photo_path'])) 
