@@ -7,8 +7,7 @@ class Controller_Stories extends Controller_Base
     	$arrayAuthenticated = json_decode($authenticated, true);
     	if($arrayAuthenticated['authenticated'])
     	{
-    		$decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
-    		
+    		$decodedToken = $this->decodeToken();
 	        try {
 		        	if (!isset($_FILES['photo_path']) || empty($_FILES['photo_path'])) 
 		            {
@@ -123,7 +122,7 @@ class Controller_Stories extends Controller_Base
     	$arrayAuthenticated = json_decode($authenticated, true);
     	
     	 if($arrayAuthenticated['authenticated']){
-    		 $decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
+    		 $decodedToken = $this->decodeToken();
     		 if(!empty($_POST['id'])){
 	       		 $story = Model_Stories::find($_POST['id']);
 	       		 if(isset($story)){
@@ -174,7 +173,7 @@ class Controller_Stories extends Controller_Base
     {	
     	$authenticated = $this->authenticate();
     	$arrayAuthenticated = json_decode($authenticated, true);
-    	 $decodedToken = JWT::decode($arrayAuthenticated["data"], MY_KEY, array('HS256'));
+    	 $decodedToken = $this->decodeToken();
     	 if($arrayAuthenticated['authenticated'])
     	 {
 	    		if(isset($_GET['idStory']))
