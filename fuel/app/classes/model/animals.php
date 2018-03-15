@@ -18,12 +18,12 @@ class Model_Animals extends Orm\Model
                 'validation' => array('required', 'max_length' => array(100))   
             ),
      'x' => array(
-                'data_type' => 'decimal',
-                'validation' => array('required', 'max_length' => array(65))
+                'data_type' => 'float',
+                'validation' => array('required')
                 ),
      'y' => array(
-                'data_type' => 'decimal',
-                'validation' => array('required', 'max_length' => array(65))
+                'data_type' => 'float',
+                'validation' => array('required')
                 ),
      'id_continent' => array(
                 'data_type' => 'int',

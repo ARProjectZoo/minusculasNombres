@@ -13,8 +13,8 @@ class Animals
                 'name' => array('type' => 'varchar', 'constraint' => 100),
                 'description' => array('type' => 'varchar', 'constraint' => 100),
                 'photo' => array('type' => 'varchar', 'constraint' => 100),
-                'x' => array('type' => 'decimal', 'constraint' => 65),
-                'y' => array('type' => 'decimal', 'constraint' => 65),
+                'x' => array('type' => 'float'),
+                'y' => array('type' => 'float'),
                 'id_continent' => array('type'=> 'int', 'constraint' => 100),
                 'id_user' => array('type'=> 'int', 'constraint' => 100)
 
