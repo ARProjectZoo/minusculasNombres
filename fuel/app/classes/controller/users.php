@@ -1,8 +1,10 @@
 <?php
+
+use Firebase\JWT\JWT;
 class Controller_Users extends Controller_Base
 {
-	public $id_admin = 1;
-    public $id_user = 2;
+    private  $idAdmin = 1;
+    private  $idUser = 2;
 
     public function post_register()
     {
@@ -38,23 +40,21 @@ class Controller_Users extends Controller_Base
         	return $this->respuesta(500, $e->getMessage(), '');
         }      
     }
-
-
-    public function newUser($input)
+    private function newUser($input)
     {
     		$user = new Model_Users();
             $user->userName = $input['userName'];
             $user->password = $this->encode($input['password']);
             $user->email = $input['email'];
             $user->id_device = $input['id_device'];
-            $user->id_role = $this->$id_user;
+            $user->id_role = $this->idUser;
             $user->profilePicture = "";
             $user->x = $input['x'];
 			$user->y = $input['y'];
             return $user;
     }
 
-    public function saveUser($user)
+    private function saveUser($user)
     {
     	$userExists = Model_Users::find('all', 
     								array('where' => array(
@@ -213,6 +213,11 @@ class Controller_Users extends Controller_Base
     			return $this->respuesta(401, 'NO AUTORIZACION','');
     		}
     }
+
+
+
+    //imagenes
+    
     
 	private function post_saveImage($profilePicture)
 	{
@@ -230,6 +235,29 @@ class Controller_Users extends Controller_Base
 
 	}
 
+
+
+	/*private function newImage($input, $photoToSave, $decodedToken)
+    {
+    	$story = new Model_Stories();
+        $story->profilePicture = $photoToSave;
+        $story->id_user = $decodedToken->id;
+        return $story;
+    }
+
+    private function saveImage($story)
+    {
+		$storyToSave = $story;
+    	$storyToSave->save();
+    	$arrayData = array(); 
+    	$arrayData['imageSaved'] = $arrayData;
+    	$json = $this->response(array(
+                'code' => 201,
+                'message' => 'Recuerdo creado',
+                'data' => $arrayData
+            ));
+    	return $json;
+    }*/
 
     public function post_changeImage()
     {
@@ -296,4 +324,5 @@ class Controller_Users extends Controller_Base
      	}
 	 }
 }
-?>
+
+
