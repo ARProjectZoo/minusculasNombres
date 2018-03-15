@@ -1,6 +1,9 @@
 <?php
 class Controller_Users extends Controller_Base
 {
+	public $id_admin = 1;
+    public $id_user = 2;
+    
     public function post_register()
     {
         try {
