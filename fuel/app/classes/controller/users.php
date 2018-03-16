@@ -207,6 +207,7 @@ class Controller_Users extends Controller_Base
 	    		$decodedToken = $this->decodeToken();
 	    			$arrayData = array();
 	    			$arrayData['userName'] = $decodedToken->userName;
+	    			$arrayData['userEmail'] = $decodedToken->email;
 	    			$arrayData['profilePicture'] = $decodedToken->profilePicture;		    			
 	    			return $this->respuesta(200, 'info User', $arrayData);				
     	}else{
